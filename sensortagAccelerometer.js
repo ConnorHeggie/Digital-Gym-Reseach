@@ -21,7 +21,16 @@
 
 	created 15 Jan 2014
 	by Tom Igoe
+	
+	
+	Since been edited to properly fit the digital-gym team project. Added code to send live raw data to server.
+	
+	07/15/2016 
+	James Grinage & Connor Heggie
+	Rice Univeristy, 2018
 */
+
+
 
 var request = require('request');
 var SensorTag = require('sensortag');		// sensortag library
