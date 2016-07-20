@@ -32,32 +32,33 @@
 
 
 
-var request = require('request');
+var request = require('request');			//allows http requests to be sent
 var SensorTag = require('sensortag');		// sensortag library
-const WINDOW_SAMPLE_NUM = 5;
-var Buffer = {};
+const WINDOW_SAMPLE_NUM = 40;				//constant for the window size that buffer will store before sneding data
 
 // listen for tags:
-SensorTag.discover(function(tag) {
+SensorTag.discover(function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
+	var buffer = {};						//semi-global variable (the scope is anything within this function)
+											//acts as a buffer to store data before being sent
 	// when you disconnect from a tag, exit the program:
-	tag.on('disconnect', function() {
+	tag.on('disconnect', function() {		//event listener for the disconnect event
 		console.log('disconnected!');
 		process.exit(0);
 	});
 
 	function connectAndSetUpMe() {			// attempt to connect to the tag
-     console.log('connectAndSetUp');
-     tag.connectAndSetUp(enableAccelMe);		// when you connect and device is setup, call enableAccelMe
+	 console.log('connectAndSetUp');
+	 tag.connectAndSetUp(enableAccelMe);		// when you connect and device is setup, call enableAccelMe
    }
 
    function enableAccelMe() {		// attempt to enable the accelerometer
-     console.log('enableAccelerometer');
-     // when you enable the accelerometer, start accelerometer notifications:
-     tag.enableAccelerometer(notifyMe);
+	 console.log('enableAccelerometer');
+	 // when you enable the accelerometer, start accelerometer notifications:
+	 tag.enableAccelerometer(notifyMe);
    }
 
 	function notifyMe() {
-   	tag.notifyAccelerometer(listenForAcc);   	// start the accelerometer listener
+		tag.notifyAccelerometer(listenForAcc);   	// start the accelerometer listener
 		tag.notifySimpleKey(listenForButton);		// start the button listener
    }
 
@@ -66,23 +67,24 @@ SensorTag.discover(function(tag) {
 		tag.on('accelerometerChange', function(x, y, z) {
 			console.log("Accel Change");
 			//add to global buffer use timestamp
-            		var time = Math.floor(Date.now() - 1468472410000);  //seconds from midnight
-            		Buffer[String(time)] = [x, y, z];
-            		//post request async
-            		if(Object.keys(Buffer).length >= WINDOW_SAMPLE_NUM){
-                		//need to deep copy the buffer and then pass it in to avoid problems with
-                		console.log("Inside If");
-				var newBuff = Buffer;
-                		Buffer = {};
-                		sendData(newBuff);
-            		}
-	     // console.log('\tx = %d G', x.toFixed(1));
-	     // console.log('\ty = %d G', y.toFixed(1));
-	     // console.log('\tz = %d G', z.toFixed(1));
-	   });
+			var time = Math.floor(Date.now() - 1468472410000);  //milliseconds from midnight
+			buffer[String(time)] = [x, y, z];
+			//post request async
+			if(Object.keys(buffer).length >= WINDOW_SAMPLE_NUM){
+				//need to deep copy the buffer and then pass it in to avoid problems with
+				console.log("Inside If");
+				var newBuff = buffer;
+				buffer = {};
+				sendData(newBuff);
+			}
+		 // console.log('\tx = %d G', x.toFixed(1));
+		 // console.log('\ty = %d G', y.toFixed(1));
+		 // console.log('\tz = %d G', z.toFixed(1));
+		});
 	}
+
 	function sendData(buff){  //post request
-		request.post('http://node-red-input-tester.mybluemix.net/bike-data/');	//fix this to include form data (aka just any data in general)
+		request.post({url: 'http://node-red-input-tester.mybluemix.net/bike-data/', json: buff});	//fix this to include form data (aka just any data in general)
 	}
 
 	// when you get a button change, print it out:
