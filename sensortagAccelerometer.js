@@ -34,7 +34,7 @@
 
 var request = require('request');			//allows http requests to be sent
 var SensorTag = require('sensortag');		// sensortag library
-const WINDOW_SAMPLE_NUM = 40;				//constant for the window size that buffer will store before sneding data
+const WINDOW_SAMPLE_NUM = 5;				//constant for the window size that buffer will store before sneding data
 
 // listen for tags:
 SensorTag.discover(function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
@@ -84,7 +84,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 	}
 
 	function sendData(buff){  //post request
-		request.post({url: 'http://node-red-input-tester.mybluemix.net/bike-data/', json: buff});	//fix this to include form data (aka just any data in general)
+		request.post('http://node-red-input-tester.mybluemix.net/bike-data/');	//fix this to include form data (aka just any data in general)
 	}
 
 	// when you get a button change, print it out:
