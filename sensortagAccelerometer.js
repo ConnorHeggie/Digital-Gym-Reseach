@@ -84,7 +84,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 	}
 
 	function sendData(buff){  //post request
-		request.post('http://node-red-input-tester.mybluemix.net/bike-data/');	//fix this to include form data (aka just any data in general)
+		request.post({"url": 'http://node-red-input-tester.mybluemix.net/bike-data/', "json": buff});	//fix this to include form data (aka just any data in general)
 	}
 
 	// when you get a button change, print it out:
