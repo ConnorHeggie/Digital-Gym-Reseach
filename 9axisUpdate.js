@@ -64,7 +64,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
    		tag.on('9axisChange', function(x, y, z, xG, yG, zG, xM, yM, zM){
    			console.log("9 axis change");
 			//add to global buffer use timestamp
-			var time = Math.floor(Date.now() - 1468472410000);  //milliseconds from midnight
+			var time = Math.floor(Date.now());  //milliseconds from January 1, 1970
 			buffer[String(time)] = [x, y, z, xG, yG, zG, xM, yM, zM];
 			//post request async
 			if(Object.keys(buffer).length >= WINDOW_SAMPLE_NUM){
