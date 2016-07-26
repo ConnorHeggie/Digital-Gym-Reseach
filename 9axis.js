@@ -40,6 +40,7 @@ const WINDOW_SAMPLE_NUM = 5;				//constant for the window size that buffer will 
 SensorTag.discover(function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
 	var accelbuffer = {};						//semi-global variable (the scope is anything within this function)
 	var gyrobuffer = {};
+	var magnetbuffer = {};
 											//acts as a buffer to store data before being sent
 	// when you disconnect from a tag, exit the program:
 	tag.on('disconnect', function() {		//event listener for the disconnect event
@@ -109,13 +110,13 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 	        console.log("Magnet Change");
 	        //add to global buffer use timestamp
 	        var time = Math.floor(Date.now() - 1468472410000);  //milliseconds from midnight
-	        gyrobuffer[String(time)] = [xM, yM, zM];
+	        magnetbuffer[String(time)] = [xM, yM, zM];
 	        //post request async
-	        if (Object.keys(gyrobuffer).length >= WINDOW_SAMPLE_NUM) {
+	        if (Object.keys(magnetbuffer).length >= WINDOW_SAMPLE_NUM) {
 	            //need to deep copy the buffer and then pass it in to avoid problems with
 	            console.log("Inside Magnet If");
-	            var newBuff = gyrobuffer;
-	            gyrobuffer = {};
+	            var newBuff = magnetbuffer;
+	            magnetbuffer = {};
 	            sendData(newBuff);
 	        }
 	    });
