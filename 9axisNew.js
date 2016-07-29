@@ -1,9 +1,7 @@
 /*
 	sensorTag Accelerometer example
-
 	This example uses Sandeep Mistry's sensortag library for node.js to
 	read data from a TI sensorTag.
-
 	Although the sensortag library functions are all asynchronous,
 	there is a sequence you need to follow in order to successfully
 	read a tag:
@@ -12,13 +10,10 @@
 		3) turn on the sensor you want to use (in this case, accelerometer)
 		4) turn on notifications for the sensor
 		5) listen for changes from the sensortag
-
 	This example does all of those steps in sequence by having each function
 	call the next as a callback. Discover calls connectAndSetUp, and so forth.
-
 	This example is heavily indebted to Sandeep's test for the library, but
 	achieves more or less the same thing without using the async library.
-
 	created 15 Jan 2014
 	by Tom Igoe
 	
@@ -51,20 +46,20 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 	 	tag.connectAndSetUp(enableWOM);		// when you connect and device is setup, call enableAccelMe
   	 }
 
-   	function enableWOM() {		// attempt to enable Wake on Motion
+   	function enableWOM() {		// attempt to enable the accelerometer
 	 	tag.enableWakeOnMotion(enableAll(notifyMe));	//enables the 9 axises and then calls notifyMe
    	}
 
 	function notifyMe() {
-	    tag.notifyMPU9250(listenFor9Change);   	// start the accelerometer listener
-		tag.notifySimpleKey(listenForButton);		// start the button listener
+	    	console.log("inside NotifyMe");
+	    	tag.notifyMPU9250(listenFor9Change);   	// start the accelerometer listener
    	}
 
    	function listenFor9Change(){
    		tag.on('9axisChange', function(x, y, z, xG, yG, zG, xM, yM, zM){
    			console.log("9 axis change");
 			//add to global buffer use timestamp
-			var time = Math.floor(Date.now() - 1468472410000);  //milliseconds from midnight				CHANGE THIS BECAUSE IT DOESN'T WORK RN
+			var time = Math.floor(Date.now());  //milliseconds from January 1, 1970
 			buffer[String(time)] = [x, y, z, xG, yG, zG, xM, yM, zM];
 			//post request async
 			if(Object.keys(buffer).length >= WINDOW_SAMPLE_NUM){
@@ -73,15 +68,16 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 				var newBuff = buffer;
 				buffer = {};
 				sendData(newBuff);
-			}
+				}
    		});
    	}
 
-	function enableAll(callback){
-	 	tag.enableAccelerometer();  //enables the accel
-	 	tag.enableGyroscope();      // enables the gyro
-	 	tag.enableMagnetometer();   // enables the mag
-	 	if(typeof(callback) === 'function'){
+	function enableAll(notify){
+		console.log("inside enableAll");
+	 	tag.enableAccelerometer(notify);  //enables the accel
+	 	tag.enableGyroscope(notify);      // enables the gyro
+	 	tag.enableMagnetometer(notify);   // enables the mag
+	 	if(typeof(callback) === "function"){
 	 		callback;
 	 	}
 	}
