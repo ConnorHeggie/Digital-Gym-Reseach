@@ -43,11 +43,12 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
 	function connectAndSetUpMe() {			// attempt to connect to the tag
 	 	console.log('connectAndSetUp');
-	 	tag.connectAndSetUp(enableWOM);		// when you connect and device is setup, call enableAccelMe
+	 	tag.connectAndSetUp(enable9Axis);		// when you connect and device is setup, call enableWOM
   	 }
 
-   	function enableWOM() {		// attempt to enable the accelerometer
-	 	tag.enableWakeOnMotion(enableAll(notifyMe));	//enables the 9 axises and then calls notifyMe
+   	function enable9Axis() {		// attempt to enable the accelerometer
+   		console.log('Wake on motion enabled');
+	 	enableAll(notifyMe);	//enables the 9 axises and then calls notifyMe
    	}
 
 	function notifyMe() {
@@ -72,11 +73,20 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
    		});
    	}
 
-	function enableAll(notify){
+	function enableAll(callback){
 		console.log("inside enableAll");
-	 	tag.enableAccelerometer(notify);  //enables the accel
-	 	tag.enableGyroscope(notify);      // enables the gyro
-	 	tag.enableMagnetometer(notify);   // enables the mag
+		tag.enableWakeOnMotion(function (){
+			console.log("Enabled WOM"):
+		});
+	 	tag.enableAccelerometer(function (){
+			console.log("Enabled Accel"):
+		});  //enables the accel
+	 	tag.enableGyroscope(function (){
+			console.log("Enabled Gyro"):
+		});      // enables the gyro
+	 	tag.enableMagnetometer(function (){
+			console.log("Enabled Mag"):
+		});   // enables the mag
 	 	if(typeof(callback) === "function"){
 	 		callback;
 	 	}
@@ -102,6 +112,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 			}
 	   });
 	}
+
 
 	// Now that you've defined all the functions, start the process:
 	connectAndSetUpMe();
