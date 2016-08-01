@@ -48,7 +48,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
    	function enableAll() {		// attempt to enable everything
    		console.log('Inside Enable All');
-	 	tag.enable9Axis(notifyMe);	//enables the 9 axises and then calls notifyMe
+	 	tag.enable9AxisandWOM(notifyMe);	//enables the 9 axises and then calls notifyMe
    	}
 
 	function notifyMe() {
