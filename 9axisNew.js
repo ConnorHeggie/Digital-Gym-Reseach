@@ -43,12 +43,12 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
 	function connectAndSetUpMe() {			// attempt to connect to the tag
 	 	console.log('connectAndSetUp');
-	 	tag.connectAndSetUp(enable9Axis);		// when you connect and device is setup, call enableWOM
+	 	tag.connectAndSetUp(enableAll);		// when you connect and device is setup, call enableWOM
   	 }
 
-   	function enable9Axis() {		// attempt to enable the accelerometer
-   		console.log('Wake on motion enabled');
-	 	enableAll(notifyMe);	//enables the 9 axises and then calls notifyMe
+   	function enableAll() {		// attempt to enable everything
+   		console.log('Inside Enable All');
+	 	tag.enable9Axis(notifyMe);	//enables the 9 axises and then calls notifyMe
    	}
 
 	function notifyMe() {
@@ -72,26 +72,6 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 				}
    		});
    	}
-
-	function enableAll(callback){
-		console.log("inside enableAll");
-		tag.enableWakeOnMotion(function (){
-			console.log("Enabled WOM"):
-		});
-	 	tag.enableAccelerometer(function (){
-			console.log("Enabled Accel"):
-		});  //enables the accel
-	 	tag.enableGyroscope(function (){
-			console.log("Enabled Gyro"):
-		});      // enables the gyro
-	 	tag.enableMagnetometer(function (){
-			console.log("Enabled Mag"):
-		});   // enables the mag
-	 	if(typeof(callback) === "function"){
-	 		callback;
-	 	}
-	}
-
 
 	function sendData(buff){  //post request
 		request.post({"url": 'http://node-red-input-tester.mybluemix.net/bike-data/', 'json': buff});	//fix this to include form data (aka just any data in general)
