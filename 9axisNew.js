@@ -29,10 +29,11 @@
 
 var request = require('request');			//allows http requests to be sent
 var SensorTag = require('sensortag');		// sensortag library
-const WINDOW_SAMPLE_NUM = 5;				//constant for the window size that buffer will store before sending data
+const WINDOW_SAMPLE_NUM = 5;
+var address = 24:71:89:07:25:06;				//constant for the window size that buffer will store before sending data
 
 // listen for tags:
-SensorTag.discover(function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
+SensorTag.discoverByAddress(address, function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
 	var buffer = {};
 											//acts as a buffer to store data before being sent
 	// when you disconnect from a tag, exit the program:
@@ -48,7 +49,12 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
    	function enableAll() {		// attempt to enable everything
    		console.log('Inside Enable All');
-	 	tag.enable9AxisandWOM(notifyMe);	//enables the 9 axises and then calls notifyMe
+	 	tag.enable9AxisandWOM(dataRate);	//enables the 9 axises and then calls notifyMe
+   	}
+
+   	function dataRate() {
+   		console.log('inside Data Rate');
+   		tag.setSamplingRate(25, notifyMe);
    	}
 
 	function notifyMe() {
@@ -58,14 +64,12 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
    	function listenFor9Change(){
    		tag.on('9axisChange', function(x, y, z, xG, yG, zG, xM, yM, zM){
-   			console.log("9 axis change");
 			//add to global buffer use timestamp
 			var time = Math.floor(Date.now());  //milliseconds from January 1, 1970
 			buffer[String(time)] = [x, y, z, xG, yG, zG, xM, yM, zM];
 			//post request async
 			if(Object.keys(buffer).length >= WINDOW_SAMPLE_NUM){
 				//need to deep copy the buffer and then pass it in to avoid problems with
-				console.log("Inside buffer If");
 				var newBuff = buffer;
 				buffer = {};
 				sendData(newBuff);
@@ -75,6 +79,7 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
 	function sendData(buff){  //post request
 		request.post({"url": 'http://node-red-input-tester.mybluemix.net/bike-data/', 'json': buff});	//fix this to include form data (aka just any data in general)
+		console.log('data sent');
 	}
 
 	// when you get a button change, print it out:
