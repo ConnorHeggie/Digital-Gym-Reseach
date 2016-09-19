@@ -1,7 +1,7 @@
 
 var request = require('request');			//allows http requests to be sent
 var SensorTag = require('sensortag');		// sensortag library
-const WINDOW_SAMPLE_NUM = 80;				// sends data every 
+const WINDOW_SAMPLE_NUM = 20;				// sends data every 
 
 // listen for tags:
 SensorTag.discover(function(tag) {			//on discovery the function defined inside the parentheses (a callback) will be run
@@ -20,29 +20,38 @@ SensorTag.discover(function(tag) {			//on discovery the function defined inside 
 
    	function enableLux() {		// attempt to enable luxometer
    		console.log('Inside Enable Lux');
-	 	tag.enableLuxometer(dataRate);	//enables the luxometer
+	 	tag.enableLuxometer(luxPeriod);	//enables the luxometer
    	}
 
-   	function dataRate() {
-   		console.log('inside Data Rate');
-   		tag.setSamplingRate(25, ReadLux);
+   	function luxPeriod() {
+   		console.log('inside Lux Period');
+   		tag.setLuxometerPeriod(25, notifyMe);
    	}
 
-	/*function notifyMe() {
+	function notifyMe() {
 	    	console.log("inside NotifyMe");
-	    	tag.notifyLuxometer(LuxChange);   	// start the lux listener
-   	}*/
-
-   	function ReadLux(){                        // most of the lux code goes within this section. still figuring out some details
-   		tag.readLuxometer();
-   		console.log('data');
-   
+	    	tag.notifyLuxometer(luxChange);   	// start the lux listener
    	}
 
-	/*function sendData(buff){  //post request
-		request.post({"url": 'http://routing-processing-flask.azurewebsites.net/bike-data/117', 'json': buff});	//fix this to include form data (aka just any data in general)
+   	function luxChange(){                        // most of the lux code goes within this section. still figuring out some details
+   		tag.on('luxometerChange', function(valLux){
+   			console.log('inside lux change')
+   			var time = Math.floor(Date.now()); // milliseconds from January 1, 1970
+   			tag.convertLuxometerData(valLux, function(flux){
+   				buffer[String(time)] = [flux];
+   				if(Object.keys(buffer).length >= WINDOW_SAMPLE_NUM){
+   					var newBuff = buffer;
+   					buffer = {};
+   					sendData(newBuff);
+   			}
+   			});
+   		}); 	
+   	}
+
+	function sendData(buff){  //post request
+		request.post({"url": 'http://showashu.mybluemix.net/bike-data', 'json': buff});	
 		console.log('data sent');
-	}*/
+	}
 
 
 	// Now that you've defined all the functions, start the process:
