@@ -1,7 +1,4 @@
-# Digital-Gym-Reseach
-Working repository for the Digital Gym project in the Scalable Health Initiative.
+# Data Analysis
+Working repository for data analysis.
 
-
-Rice Digital Gym project is turning Rice gym into a massive health sensor. The Digital Gym will serve as a foundation to measure how exercise impacts the wellness and health of a whole community, in this case, the Rice community. To convert the gym into a massive sensor, we are developing mountables. Mountables can be mounted on any gym equipment or gym space, and will convert  “analog” equipment/spaces to “networked digital” gym equipment/spaces.
-
-The project is part of Rice Scalable Labs, and partially funded by NSF VIP.
+The goal of the data analysis team is to dervie charactersitics from the raw data gotten from the sensors on the machines in the gym.
