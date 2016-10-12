@@ -1,7 +1,10 @@
 # Digital-Gym-Reseach
-Working repository for the Digital Gym project in the Scalable Health Initiative.
+Working repository for the backend team.
 
+The goal of this team is to handle the cloud storing and processing of the data that gets sent from the sensors and subsequently to the mobile app.
 
-Rice Digital Gym project is turning Rice gym into a massive health sensor. The Digital Gym will serve as a foundation to measure how exercise impacts the wellness and health of a whole community, in this case, the Rice community. To convert the gym into a massive sensor, we are developing mountables. Mountables can be mounted on any gym equipment or gym space, and will convert  “analog” equipment/spaces to “networked digital” gym equipment/spaces.
-
-The project is part of Rice Scalable Labs, and partially funded by NSF VIP.
+Files:
+app.py - The main Flask app that handles urls routing and processing.
+bikeAnalysisOld.py - Original code for extracting RPM, does not work in cloud due to SciPy issue.
+serverAnalysisAzure.py - New code to extract RPM from bike data, works in cloud but does not produce correct numbers.
+requirements.txt - Requirements for the virtual environment that app.py runs in.

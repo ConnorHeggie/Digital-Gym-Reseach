@@ -1,6 +1,13 @@
+#Data Acquisition
+Working repository for data acqusition team.
+
+The goal of this team is to gather meaningful data from machines in the gym using sensors and a BeagleBone Black as an edge router.
+
+Files:
+9axisNew.js - *description*
+
+
 Connect BBB to Internet Over USB
-
-
 
 1.  View Network Connections
 
@@ -13,11 +20,7 @@ Connect BBB to Internet Over USB
 
 
 Run Accelerometer Code On BBB
-
-
-
 Prerequisites: Make sure BBB can access internet, bluetooth adapter is connected to BBB and the proper bluetooth packages have been                   installed 
-
 
 1. Open PuTTy
    
